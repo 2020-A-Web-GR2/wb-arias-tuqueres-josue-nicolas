@@ -1,4 +1,4 @@
-import {BadRequestException, Controller, Delete, Get, Header, HttpCode, Param, Post} from "@nestjs/common";
+import {BadRequestException, Body, Controller, Delete, Get, Header, HttpCode, Param, Post, Query} from "@nestjs/common";
 
 // http://localhost:3001/juegos-http
 //@Controller('juegos-http')
@@ -41,6 +41,36 @@ export class HttpJuegoController {
         } else{
             throw new BadRequestException('No son números')
         }
+    }
+
+    //http://localhost:3001/juegos-http/parametros-consulta
+    @Get('/parametros-consulta')
+    parametrosConsulta(
+        @Query() parametrosDeConsulta
+    ){
+        console.log('parametrosDeConsulta', parametrosDeConsulta)
+        console.log('nombre', typeof parametrosDeConsulta.nombre)
+        console.log('apellido', typeof parametrosDeConsulta.apellido)
+        const tieneApellidoYNombre = parametrosDeConsulta.nombre && parametrosDeConsulta.apellido
+
+        /*if((typeof parametrosDeConsulta.nombre !== 'undefined')
+            && (typeof parametrosDeConsulta.apellido !== 'undefined')
+            && (parametrosDeConsulta.length == 2)){*/
+        if(tieneApellidoYNombre){
+           return parametrosDeConsulta.nombre + " " + parametrosDeConsulta.apellido;
+        }else{
+            return '=D';
+        }
+
+    }
+
+    //http://localhost:3001/juegos-http/parametros-cuerpo
+    @Post('parametros-cuerpo')
+    parametrosCuerpo(
+        @Body() parametrosDeCuerpo
+    ){
+        console.log('parametros de cuerpo', parametrosDeCuerpo)
+        return 'Registro creado';
     }
 
 }
