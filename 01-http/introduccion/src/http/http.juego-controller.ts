@@ -130,5 +130,52 @@ export class HttpJuegoController {
     }
 
     // 2 Guardar Cookie Segura
+    //http://localhost:3001/juegos-http/guardarCookieSegura
+    @Get("guardarCookieSegura")
+    guardarCookieSegura(
+        @Query() parametrosConsulta,
+        @Req() req, // request - peticion
+        @Res() res // responese - respuesta
+    ){
+        res.cookie(
+            'galletaSegura', // nombre o clave
+            'Web :3', // valor
+            {
+                secure: true
+            }
+        );
+        const mensaje = {
+            mensaje:"hola"
+        }
+
+        res.send(mensaje)
+    }
+
     // 3 Mostrar Cookies
+    //http://localhost:3001/juegos-http/mostrarCookies
+    @Get("mostrarCookies")
+    mostrarCookies(
+        @Query() parametrosConsulta,
+        @Req() req, // request - peticion
+    ){
+        const mensaje= {
+            sinFirmar: req.cookies,
+            firmadas: req.signedCookies
+        }
+        return mensaje;
+    }
+
+    // 4 Guardar cookie firmada
+    //http://localhost:3001/juegos-http/guardarCookieFirmada
+    @Get("guardarCookieFirmada")
+    guardarCookieFirmada(
+        @Res() res,
+    ){
+        res.cookie('firmada', 'poliburguer', {signed: true});
+        const mensaje = {
+            mensaje : 'ok'
+        }
+        res.send(mensaje);
+    }
+
 }
