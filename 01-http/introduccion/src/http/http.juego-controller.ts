@@ -120,7 +120,7 @@ export class HttpJuegoController {
     ){
         res.cookie(
             'galletaInsegura', // nombre o clave
-            'Tengo hambre', // valor
+            'Quiero comer', // valor
             );
         const mensaje = {
             mensaje:"ok"
@@ -158,6 +158,8 @@ export class HttpJuegoController {
         @Query() parametrosConsulta,
         @Req() req, // request - peticion
     ){
+        console.log('parametros de cuerpo', req.cookies["galletaInsegura"])
+        console.log('parametros de cuerpo', typeof req.cookies)
         const mensaje= {
             sinFirmar: req.cookies,
             firmadas: req.signedCookies
