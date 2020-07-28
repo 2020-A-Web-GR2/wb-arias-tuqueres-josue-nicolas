@@ -1,4 +1,4 @@
-import {Module} from "@nestjs/common";
+/*import {Module} from "@nestjs/common";
 import {usuarioController} from "./usuario.controller";
 import {usuarioService} from "./usuario.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -24,3 +24,4 @@ import {UsuarioEntity} from "./usuario.entity";
 })
 
 export class usuarioModule{}
+*/

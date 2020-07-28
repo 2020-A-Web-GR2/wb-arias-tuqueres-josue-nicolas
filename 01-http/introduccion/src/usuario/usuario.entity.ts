@@ -1,4 +1,4 @@
-import {Column, Entity, Index, PrimaryGeneratedColumn} from "typeorm";
+/*import {Column, Entity, Index, PrimaryGeneratedColumn} from "typeorm";
 
 
 @Index([ //INDICES DE BUSQUEDA ---- NOMBRES DE LAS PROPIEDADES DE LA CLASE
@@ -59,3 +59,4 @@ export class UsuarioEntity {
     })
     fechaNacimiento?:string;
 }
+*/

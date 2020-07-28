@@ -28,18 +28,43 @@ export class HttpCalculadoraController {
     sumarGet(
         @Query() parametrosDeConsulta,
         @Param() parametrosDeRuta,
-        @Req() req
+        @Req() req,
+        @Res() res
     ){
-        const validarNombreUsuario = req.cookies["nombre usuario"]
+        const validarNombreUsuario = req.cookies["usuario"]
         if (validarNombreUsuario){
             const validarN1yN2 = parametrosDeConsulta.n1 && parametrosDeRuta.n2 && !isNaN(parametrosDeConsulta.n1)  && !isNaN(parametrosDeRuta.n2)
             if(validarN1yN2){
-                return Number(parametrosDeConsulta.n1) + Number(parametrosDeRuta.n2)
+                const resultado = Number(parametrosDeConsulta.n1) + Number(parametrosDeRuta.n2)
+                const puntaje = req.signedCookies["puntaje"]
+                const puntajeNuevo = (Number(puntaje) - Math.abs(resultado))
+                if (Number(puntajeNuevo) <= 0){
+                    res.cookie(
+                        'puntaje',
+                        '100',
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado,
+                        nota: String(req.cookies["usuario"]).concat(", has terminado tus puntos, se te han restablecido de nuevo")
+                    }
+                    res.send(mensaje)
+                } else {
+                    res.cookie(
+                        'puntaje',
+                        puntajeNuevo,
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado
+                    }
+                    res.send(mensaje)
+                }
             }else{
                 throw new BadRequestException('Datos incorrectos')
             }
         }else {
-            return "Debe registrarse"
+            res.send("Debe registrarse")
         }
 
     }
@@ -56,21 +81,45 @@ export class HttpCalculadoraController {
     restarPut(
         @Body() parametrosDeCuerpo,
         @Query() parametrosDeConsulta,
-        @Req() req
+        @Req() req,
+        @Res() res
     ){
-    const validarNombreUsuario = req.cookies["nombre usuario"]
+    const validarNombreUsuario = req.cookies["usuario"]
 
         if (validarNombreUsuario) {
             const validarN1yN2 = parametrosDeCuerpo.n1 && parametrosDeConsulta.n2 && !isNaN(parametrosDeCuerpo.n1) && !isNaN(parametrosDeConsulta.n2)
             if (validarN1yN2) {
-                //return "valio"
-                return parametrosDeCuerpo.n1 - Number(parametrosDeConsulta.n2)
+                const resultado = parametrosDeCuerpo.n1 - Number(parametrosDeConsulta.n2)
+                const puntaje = req.signedCookies["puntaje"]
+                const puntajeNuevo = (Number(puntaje) - Math.abs(resultado))
+                if (Number(puntajeNuevo) <= 0){
+                    res.cookie(
+                        'puntaje',
+                        '100',
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado,
+                        nota: String(req.cookies["usuario"]).concat(", has terminado tus puntos, se te han restablecido de nuevo")
+                    }
+                    res.send(mensaje)
+                } else {
+                    res.cookie(
+                        'puntaje',
+                        puntajeNuevo,
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado
+                    }
+                    res.send(mensaje)
+                }
             } else {
                 //return "no valio"
                 throw new BadRequestException('Datos incorrectos')
             }
         } else {
-            return "Debe registrarse"
+            res.send("Debe registrarse")
         }
     }
 
@@ -85,23 +134,45 @@ export class HttpCalculadoraController {
     multiplicarDelete(
         @Headers() headers,
         @Body() parametrosDeCuerpo,
-        @Req() req
+        @Req() req,
+        @Res() res
     ){
-        const validarNombreUsuario = req.cookies["nombre usuario"]
+        const validarNombreUsuario = req.cookies["usuario"]
 
         if (validarNombreUsuario){
             const validarN1yN2 = headers["n1"] && parametrosDeCuerpo.n2 && !isNaN(headers["n1"])  && !isNaN(parametrosDeCuerpo.n2)
             if(validarN1yN2){
-                //console.log('headers["n1"]', headers["n1"])
-                //console.log('headers["n1"]', typeof headers["n1"])
-                //return "valio"
-                return Number(headers["n1"]) * Number(parametrosDeCuerpo.n2)
+                const resultado = Number(headers["n1"]) * Number(parametrosDeCuerpo.n2)
+                const puntaje = req.signedCookies["puntaje"]
+                const puntajeNuevo = (Number(puntaje) - Math.abs(resultado))
+                if (Number(puntajeNuevo) <= 0){
+                    res.cookie(
+                        'puntaje',
+                        '100',
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado,
+                        nota: String(req.cookies["usuario"]).concat(", has terminado tus puntos, se te han restablecido de nuevo")
+                    }
+                    res.send(mensaje)
+                } else {
+                    res.cookie(
+                        'puntaje',
+                        puntajeNuevo,
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado
+                    }
+                    res.send(mensaje)
+                }
             }else{
                 //return "no valio"
                 throw new BadRequestException('Datos incorrectos')
             }
         } else {
-            return "Debe registrarse"
+            res.send("Debe registrarse")
         }
     }
 
@@ -118,33 +189,55 @@ export class HttpCalculadoraController {
     dividirDelete(
         @Param() parametrosDeRuta,
         @Headers() headers,
-        @Req() req
+        @Req() req,
+        @Res() res
     ){
-        const validarNombreUsuario = req.cookies["nombre usuario"]
+        const validarNombreUsuario = req.cookies["usuario"]
 
         if (validarNombreUsuario) {
             const validarN1yN2 = parametrosDeRuta.n1 && headers["n2"] && !isNaN(parametrosDeRuta.n1) && !isNaN(headers["n2"])
             if (validarN1yN2 && (Number(headers["n2"]) != 0)) {
-                //console.log('headers["n1"]', headers["n1"])
-                //console.log('headers["n1"]', typeof headers["n1"])
-                //return "valio"
-                return Number(parametrosDeRuta.n1) / Number(headers["n2"])
+                const resultado = Number(parametrosDeRuta.n1) / Number(headers["n2"])
+                const puntaje = req.signedCookies["puntaje"]
+                const puntajeNuevo = (Number(puntaje) - Math.abs(resultado))
+                if (Number(puntajeNuevo) <= 0){
+                    res.cookie(
+                        'puntaje',
+                        '100',
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado,
+                        nota: String(req.cookies["usuario"]).concat(", has terminado tus puntos, se te han restablecido de nuevo")
+                    }
+                    res.send(mensaje)
+                } else {
+                    res.cookie(
+                        'puntaje',
+                        puntajeNuevo,
+                        {signed: true}
+                    );
+                    const mensaje = {
+                        resultado: resultado
+                    }
+                    res.send(mensaje)
+                }
             } else {
                 //return "no valio"
                 throw new BadRequestException('Datos incorrectos')
             }
         } else {
-            return "Debe registrarse"
+            res.send("Debe registrarse")
         }
     }
 
-    // http://localhost:3001/calculadora-http/guardarCookieInsegura?nombre=Nicolas
+    // http://localhost:3001/calculadora-http/guardarNombre?nombre=Nicolas
     //METODO GUARDAR (nombre)
     // GET
     // (Guardar cookie inseguro y no firmada) nombre del usuario
     // QUERY (nombre)
-    @Get("guardarCookieInsegura")
-    guardarCookieInsegura(
+    @Get("guardarNombre")
+    guardarNombre(
         @Query() parametrosConsulta,
         @Res() res
     ){
@@ -152,9 +245,14 @@ export class HttpCalculadoraController {
 
         if (validarNombre){
             res.cookie(
-                "nombre usuario", // nombre o clave
+                "usuario", // nombre o clave
                 parametrosConsulta.nombre, // valor
             );
+            res.cookie(
+                'puntaje',
+                '100',
+                {signed: true}
+                );
             const mensaje = {
                 mensaje:"ok"
             }
@@ -165,13 +263,15 @@ export class HttpCalculadoraController {
         }
     }
 
+
     //http://localhost:3001/calculadora-http/mostrarCookies
     @Get("mostrarCookies")
     mostrarCookies(
         @Req() req, // request - peticion
     ){
         const mensaje= {
-            cookies: req.cookies,
+            sinFirmar: req.cookies,
+            firmadas: req.signedCookies
         }
         return mensaje;
     }
