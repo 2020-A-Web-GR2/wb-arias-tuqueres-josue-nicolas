@@ -3,17 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {HttpJuegoModule} from "./http/juego-module";
 import {HttpCalculadoraModule} from "./Deber1/calculadora-module";
-import {usuarioModule} from "./usuario/usuario.module";
+/*import {usuarioModule} from "./usuario/usuario.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {UsuarioEntity} from "./usuario/usuario.entity";
+import {UsuarioEntity} from "./usuario/usuario.entity";*/
 
 @Module({
   imports: [
       //Aqui otros módulos
       HttpJuegoModule,
       HttpCalculadoraModule,
-      usuarioModule,
-      TypeOrmModule
+      //usuarioModule,
+      /*TypeOrmModule
           .forRoot({
               name:'default', //nombre de la conexion
               type: 'mysql', //mysql postgres
@@ -27,7 +27,7 @@ import {UsuarioEntity} from "./usuario/usuario.entity";
               ],
               synchronize: true, //Actualiza el esquema de la base de datos
               dropSchema: false, //Eliminar Datos y el Esquema de base de datos
-          }),
+          }),*/
   ],
   controllers: [
       //Controladores de APP MODULE

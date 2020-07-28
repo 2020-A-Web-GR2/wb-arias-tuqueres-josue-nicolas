@@ -10,7 +10,7 @@ async function bootstrap() {
       * ANTES DEL APP.LISTEN()
       */
       // await app.listen(3001);
-    app.use(cookieParser("Me agradan los poliperros"));
+    app.use(cookieParser("Codigo secreto de la cookie firmada"));
     await app.listen(3001);
 }
 bootstrap();

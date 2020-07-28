@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post, Put} from "@nestjs/common";
+/*import {BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post, Put} from "@nestjs/common";
 @Controller("usuario")
 
 //http://localhost:3001/usuario
@@ -96,3 +96,5 @@ export class usuarioController {
     // DELETE http://localhost:3001/mascota/1
 
 }
+
+*/
