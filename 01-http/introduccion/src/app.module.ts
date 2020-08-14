@@ -3,17 +3,22 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {HttpJuegoModule} from "./http/juego-module";
 import {HttpCalculadoraModule} from "./Deber1/calculadora-module";
-import {usuarioModule} from "./usuario/usuario.module";
+import {UsuarioModule} from "./usuario/usuario.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UsuarioEntity} from "./usuario/usuario.entity";
+import {MascotaEntity} from "./mascota/mascota.entity";
+import {VacunaEntity} from "./vacuna/vacuna.entity";
+import {MascotaModule} from "./mascota/mascota.module";
+import {VacunaModule} from "./vacuna/vacuna.module";
 
 @Module({
   imports: [
       //Aqui otros módulos
       HttpJuegoModule,
       HttpCalculadoraModule,
-
-      usuarioModule,
+      UsuarioModule,
+      MascotaModule,
+      VacunaModule,
       TypeOrmModule
           .forRoot({
               name:'default', //nombre de la conexion
@@ -24,7 +29,9 @@ import {UsuarioEntity} from "./usuario/usuario.entity";
               password: 'narias', //password
               database: 'ejemplo', //base de datos
               entities: [//todas las entidades
-                UsuarioEntity
+                UsuarioEntity,
+                MascotaEntity,
+                VacunaEntity
               ],
               synchronize: true, //Actualiza el esquema de la base de datos
               dropSchema: false, //Eliminar Datos y el Esquema de base de datos

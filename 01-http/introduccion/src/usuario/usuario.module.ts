@@ -8,7 +8,7 @@ import {UsuarioEntity} from "./usuario.entity";
 @Module({
     imports: [
         TypeOrmModule
-            .forFeature(
+        .forFeature(
                 [
                     UsuarioEntity
                 ],
@@ -23,4 +23,4 @@ import {UsuarioEntity} from "./usuario.entity";
     ],
 })
 
-export class usuarioModule{}
+export class UsuarioModule{}
