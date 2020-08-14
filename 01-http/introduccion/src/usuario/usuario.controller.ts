@@ -1,4 +1,16 @@
-import {BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post, Put} from "@nestjs/common";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    InternalServerErrorException, NotFoundException,
+    Param,
+    Post,
+    Put
+} from "@nestjs/common";
+import {usuarioService} from "./usuario.service";
 @Controller("usuario")
 
 //http://localhost:3001/usuario
@@ -22,59 +34,127 @@ export class usuarioController {
     ]
     public idActual = 3;
 
+    constructor(
+        private readonly _usuarioService: usuarioService
+    ) {
+    }
+
     @Get()
     @HttpCode(201)
-    mostrarTodos(){
-        return "ok"
+    async mostrarTodos(){
+        try {
+            const respuesta = await this._usuarioService.buscarTodos()
+            return respuesta;
+        }catch (e) {
+            console.error(e)
+            throw new InternalServerErrorException(
+                {mensaje:"Error del servidor"}
+            )
+        }
     }
 
     @Post()
-    crearUno(
+    async crearUno(
         @Body() parametrosCuerpo
     ){
-        const nuevoUsuario = {
+        try {
+            //validacion del create DTO
+            const respuesta = await this._usuarioService.crearUno(parametrosCuerpo);
+            return respuesta
+        } catch (e) {
+            console.error(e);
+            throw new BadRequestException(
+                {mensaje:"Error validando datos"}
+            )
+        }
+        /*const nuevoUsuario = {
             id: this.idActual + 1,
             nombre: parametrosCuerpo.nombre
         }
         this.arregloUsuario.push(nuevoUsuario);
         this.idActual = this.idActual + 1;
-        return nuevoUsuario
+        return nuevoUsuario*/
     }
 
     @Get(':id')
-    verUno(
+    async verUno(
         @Param() parametrosRuta
     ){
-        const indice = this.arregloUsuario.findIndex(
+        let respuesta;
+        try {
+            respuesta = await this._usuarioService.buscarUno(Number(parametrosRuta.id))
+        }catch (e) {
+            console.error(e)
+            throw new InternalServerErrorException(
+                {mensaje:"Error del servidor"}
+            )
+        }
+
+        if(respuesta){
+            return respuesta
+        }else {
+            throw new NotFoundException(
+                {mensaje:"No existen registros"}
+            )
+        }
+        /*const indice = this.arregloUsuario.findIndex(
             //(usuario) => usuario.id === Number(parametros.id)
             (usuario) => usuario.id === Number(parametrosRuta.id)
         )
-        return this.arregloUsuario[indice]
+        return this.arregloUsuario[indice]*/
     }
 
     @Put(':id')
-    editarUno(
+    async editarUno(
         @Body() parametrosCuerpo,
         @Param() parametrosRuta
     ){
-        const indice = this.arregloUsuario.findIndex(
+        const id = Number(parametrosRuta.id);
+        const usuarioEditado = parametrosCuerpo;
+        usuarioEditado.id = id;
+        try {
+            //validacion del create DTO
+            const respuesta = await this._usuarioService.editarUno(usuarioEditado);
+            return respuesta
+        } catch (e) {
+            console.error(e);
+            throw new InternalServerErrorException(
+                {mensaje:"Error del servidor"}
+            )
+        }
+
+        /*const indice = this.arregloUsuario.findIndex(
             //(usuario) => usuario.id === Number(parametros.id)
             (usuario) => usuario.id === Number(parametrosRuta.id)
         )
         this.arregloUsuario[indice].nombre = parametrosCuerpo.nombre;
-        return this.arregloUsuario[indice]
+        return this.arregloUsuario[indice]*/
     }
 
     @Delete(':id')
-    eliminarUno(
+    async eliminarUno(
         @Param() parametrosRuta
     ){
-        const indice = this.arregloUsuario.findIndex(
+        const id = Number(parametrosRuta.id);
+        try {
+            //validacion del create DTO
+            const respuesta = await this._usuarioService.eliminarUno(id);
+            return {
+                mensaje:"Registro con id " + id + " eliminado"
+            }
+        } catch (e) {
+            console.error(e);
+            throw new InternalServerErrorException(
+                {mensaje:"Error del servidor"}
+            )
+        }
+
+        /*const indice = this.arregloUsuario.findIndex(
             //(usuario) => usuario.id === Number(parametros.id)
             (usuario) => usuario.id === Number(parametrosRuta.id)
         )
         this.arregloUsuario.splice(indice, 1)
-        return this.arregloUsuario[indice]
+        return this.arregloUsuario[indice]*/
     }
     
 
