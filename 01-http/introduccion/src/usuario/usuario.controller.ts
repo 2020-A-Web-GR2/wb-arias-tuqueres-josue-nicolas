@@ -8,9 +8,13 @@ import {
     InternalServerErrorException, NotFoundException,
     Param,
     Post,
-    Put
+    Put, Res
 } from "@nestjs/common";
-import {usuarioService} from "./usuario.service";
+import {UsuarioService} from "./usuario.service";
+import {UsuarioCreateDto} from "./dto/usuario.create-dto";
+import {validate, ValidationError} from "class-validator";
+import {UsuarioUpdateDto} from "./dto/usuario.update-dto";
+import {MascotaService} from "../mascota/mascota.service";
 @Controller("usuario")
 
 //http://localhost:3001/usuario
@@ -35,7 +39,8 @@ export class usuarioController {
     public idActual = 3;
 
     constructor(
-        private readonly _usuarioService: usuarioService
+        private readonly _usuarioService: UsuarioService,
+        private readonly _mascotaService: MascotaService
     ) {
     }
 
@@ -57,10 +62,26 @@ export class usuarioController {
     async crearUno(
         @Body() parametrosCuerpo
     ){
+        const usuarioValido = new UsuarioCreateDto();
+        usuarioValido.nombre = parametrosCuerpo.nombre;
+        usuarioValido.apellido = parametrosCuerpo.apellido;
+        usuarioValido.cedula = parametrosCuerpo.cedula;
+        usuarioValido.sueldo = parametrosCuerpo.sueldo;
+        usuarioValido.fechaNacimiento = parametrosCuerpo.fechaNacimiento;
+
         try {
             //validacion del create DTO
-            const respuesta = await this._usuarioService.crearUno(parametrosCuerpo);
-            return respuesta
+            const errores:ValidationError[] = await validate(usuarioValido)
+            if(errores.length > 0){
+                console.error('Errores', errores)
+                throw new BadRequestException('Error validando datos')
+            }else{
+                const respuesta = await this._usuarioService.crearUno(parametrosCuerpo);
+                return {
+                    mensaje: 'Se creo correctamente',
+                    respuesta: respuesta
+                }
+            }
         } catch (e) {
             console.error(e);
             throw new BadRequestException(
@@ -112,14 +133,32 @@ export class usuarioController {
         const id = Number(parametrosRuta.id);
         const usuarioEditado = parametrosCuerpo;
         usuarioEditado.id = id;
+
+        const usuarioValido = new UsuarioUpdateDto();
+        usuarioValido.nombre = parametrosCuerpo.nombre;
+        usuarioValido.apellido = parametrosCuerpo.apellido;
+        usuarioValido.cedula = parametrosCuerpo.cedula;
+        usuarioValido.sueldo = parametrosCuerpo.sueldo;
+        usuarioValido.fechaNacimiento = parametrosCuerpo.fechaNacimiento;
+
+
         try {
-            //validacion del create DTO
-            const respuesta = await this._usuarioService.editarUno(usuarioEditado);
-            return respuesta
+            const errores:ValidationError[] = await validate(usuarioValido)
+            if(errores.length > 0){
+                console.error('Errores', errores)
+                throw new BadRequestException('Error validando datos')
+            }else{
+                const respuesta = await this._usuarioService.editarUno(usuarioEditado);
+                return {
+                    mensaje: 'Se actualizó correctamente',
+                    respuesta: respuesta
+                }
+            }
+
         } catch (e) {
             console.error(e);
-            throw new InternalServerErrorException(
-                {mensaje:"Error del servidor"}
+            throw new BadRequestException(
+                {mensaje:"Error validando datos"}
             )
         }
 
@@ -156,8 +195,83 @@ export class usuarioController {
         this.arregloUsuario.splice(indice, 1)
         return this.arregloUsuario[indice]*/
     }
-    
 
+    @Post("crearUsuarioYcrearMascota")
+    async crearUsuarioYCrearMascota(
+        @Body() parametrosCuerpo
+    ){
+        const usuario = parametrosCuerpo.usuario;
+        const mascota = parametrosCuerpo.mascota;
+        //VALIDAR USUARIO
+        //VALIDAR MASCOTA
+        // -> CREAMOS LOS DOS
+        let usuarioCreado
+        try {
+            usuarioCreado = await this._usuarioService.crearUno(usuario);
+        }catch (e) {
+            console.error(e);
+            throw new InternalServerErrorException({mensaje: "Error creado usuario"})
+        }
+        if(usuarioCreado){
+            mascota.usuario = usuarioCreado.id;
+            let mascotaCreada
+            try {
+                mascotaCreada = await this._mascotaService.crearNuevaMascota(mascota)
+            }catch (e) {
+                console.error(e);
+                throw new InternalServerErrorException({mensaje: "Error creado mascota"})
+            }
+            if(mascotaCreada){
+                return {
+                    mascota: mascotaCreada,
+                    usuario: usuarioCreado
+                }
+            }else{
+                throw new InternalServerErrorException({mensaje: "Error creado mascota"})
+            }
+        }else{
+            throw new InternalServerErrorException({mensaje: "Error creado usuario"})
+        }
+
+    }
+
+    //http://localhost:3001/usuario/vista/usuario
+    @Get("vista/usuario")
+    vistaUsuario(
+        @Res() res
+    ){
+        const nombreControlador = "Nicolas";
+        res.render(
+            "usuario/ejemplo", // NOMBRE DE LA VISTA
+            { // PARAMETROS DE LA VISTA
+                nombre: nombreControlador
+            }
+        )
+    }
+
+    //http://localhost:3001/usuario/vista/faq
+    @Get("vista/faq")
+    faq(
+        @Res() res
+    ){
+        res.render("usuario/faq")
+    }
+
+    //http://localhost:3001/usuario/vista/login
+    @Get("vista/login")
+    login(
+        @Res() res
+    ){
+        res.render("usuario/login")
+    }
+
+    //http://localhost:3001/usuario/vista/inicio
+    @Get("vista/inicio")
+    inicio(
+        @Res() res
+    ){
+        res.render("usuario/inicio")
+    }
 
     //XML <usuario><nombre>Nicolas</nombre><apellido>Arias</apellido></usuario>
     //JSON {"nombre":"Nicolas","apellido":"Arias"}
