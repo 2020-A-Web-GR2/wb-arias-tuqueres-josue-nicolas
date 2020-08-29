@@ -1,14 +1,3 @@
-//@IsAlpha()
-//@IsNotEmpty()
-//@MinLength()
-//@MaxLength()
-//@IsBoolean()
-//@IsEmpty()
-//@IsInt()
-//@IsPositive()
-//@IsOptional()
-//@IsNumber()
-
 import {
     IsAlpha,
     IsNotEmpty,

@@ -4,7 +4,7 @@ import {UsuarioEntity} from "./usuario.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 
 @Injectable()
-export class usuarioService {
+export class UsuarioService {
 
     constructor( // Inyeccion de Dependencias
         @InjectRepository(UsuarioEntity)

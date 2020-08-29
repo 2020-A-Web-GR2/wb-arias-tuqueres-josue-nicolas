@@ -1,12 +1,14 @@
 import {Module} from "@nestjs/common";
 import {usuarioController} from "./usuario.controller";
-import {usuarioService} from "./usuario.service";
+import {UsuarioService} from "./usuario.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UsuarioEntity} from "./usuario.entity";
+import {MascotaModule} from "../mascota/mascota.module";
 
 
 @Module({
     imports: [
+        MascotaModule,
         TypeOrmModule
         .forFeature(
                 [
@@ -19,7 +21,7 @@ import {UsuarioEntity} from "./usuario.entity";
         usuarioController
     ],
     providers: [
-        usuarioService
+        UsuarioService
     ],
 })
 
