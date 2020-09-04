@@ -8,4 +8,56 @@
     ALERTAR
 </button>
 
+<!-- "=" -->
+<p><%= "Hola"%></p>
+<p><%= 15%></p>
+
+<!-- "< % % >" -->
+<% const nicolas = {
+    nombre:"Nicolas",
+    apellido: "Arias",
+    cedula:"1726439001"
+}%>
+<% const numero = 25 %>
+<% const mensaje = "Hola" %>
+
+<p><%=nicolas.nombre%> <%=nicolas.apellido%> <%=nicolas.cedula%></p>
+<p><%=numero%></p>
+<p><%=mensaje%></p>
+
+<% const arregloNumeros = [1,2,3,4,5]%>
+<ul>
+    <% arregloNumeros.forEach( (objecto) => {%>
+    <li><%= objecto%></li>
+    <% })%>
+</ul>
+
+<a href="/usuario/vista/crear">
+    <button>Crear</button>
+</a>
+
+<table>
+    <!-- table row -->
+    <tr>
+        <!-- table header -->
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Cedula</th>
+        <th>Acciones</th>
+    </tr>
+    <% arregloUsuarios.forEach( (objeto) => {%>
+    <tr>
+        <!-- table detail -->
+        <td><%=objeto.nombre%></td>
+        <td><%=objeto.apellido%></td>
+        <td><%=objeto.cedula%></td>
+        <td>
+            <button>Ver</button>
+            <button>Editar</button>
+            <button>Eliminar</button>
+        </td>
+    </tr>
+    <% })%>
+</table>
+
 <%- include('../compartido/funcionalidad-general/funcionalidad-general-component')%>
