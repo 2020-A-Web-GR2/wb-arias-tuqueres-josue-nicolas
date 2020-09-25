@@ -26,7 +26,7 @@ import {VacunaModule} from "./vacuna/vacuna.module";
               host: 'localhost', //ip
               port: 3306, //puerto
               username: 'root', //usuario
-              password: 'narias', //password
+              password: 'root', //password
               database: 'ejemplo', //base de datos
               entities: [//todas las entidades
                 UsuarioEntity,

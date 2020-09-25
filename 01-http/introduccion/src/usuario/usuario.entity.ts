@@ -67,5 +67,4 @@ export class UsuarioEntity {
         // Campo con el que nos relacionamos
     )
     mascotas: MascotaEntity[];
-
 }

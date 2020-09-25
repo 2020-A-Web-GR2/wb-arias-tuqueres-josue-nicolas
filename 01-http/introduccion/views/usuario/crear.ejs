@@ -2,22 +2,56 @@
 <%- include('../compartido/menu/menu-component')%>
 
 <!-- usuario/crear -->
-<h1>Crear usuario</h1>
 
+<% let existeUsuario = typeof usuario != 'undefined'%>
+
+<% let existeNombre = typeof nombre !== "undefined"%>
+<% let existeApellido = typeof apellido !== "undefined"%>
+<% let existeCedula = typeof cedula !== "undefined"%>
+
+<h1><%= existeUsuario ? 'Editar': 'Crear'%> usuario</h1>
+
+<!-- setear nombre y apellido -->
+<% if(existeUsuario){
+    //existeNombre = true
+    //existeApellido = true
+    //existeCedula = true
+    nombre = usuario.nombre
+    apellido = usuario.apellido
+    cedula = usuario.cedula
+
+}%>
+<!--
 <form action="https://www.google.com" method="GET">
     <label for="query">Consulta:</label>
     <input id="query" type="text" name="q">
-</form>
+</form> -->
 
-<form action="/usuario/crearDesdeVista" method="POST">
+<% if(error != undefined){ %>
+    <p>MENSAJE ERROR: <%= error%></p>
+<% }%>
+
+<form action="<%= existeUsuario ? '/usuario/editarDesdeVista/' + usuario.id : '/usuario/crearDesdeVista'%>"
+      method="POST">
+
     <label for="nombreID"> Nombre:</label>
-    <input id="nombreID" type="text" name="nombre">
+    <input id="nombreID" type="text" name="nombre" value="<%= existeNombre ? nombre: '' %>">
     <br>
+
     <label for="apellidoID">Apellido:</label>
-    <input id="apellidoID" type="text" name="apellido">
+    <input
+            id="apellidoID"
+            type="text"
+            name="apellido"
+            value="<%= existeApellido ? apellido: '' %>">
     <br>
+
     <label for="cedulaID">Cedula:</label>
-    <input id="cedulaID" type="text" name="cedula">
+    <input id="cedulaID" type="text"
+            <%if (existeUsuario){%>
+                disabled
+            <%}%>
+           name="cedula" value="<%= existeCedula ? cedula: '' %>">
     <br>
     <br>
     <button type="submit">SUBMIT</button>
